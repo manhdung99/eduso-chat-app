@@ -20,7 +20,8 @@ const firebaseConfig = {
   measurementId: "G-4SEY2DPNQ2",
 };
 firebase.initializeApp(firebaseConfig);
-
+const FieldValue = firebase.firestore.FieldValue;
+const Timestamp = firebase.firestore.Timestamp;
 const db = firebase.firestore();
 const database = getDatabase();
 const storage = getStorage();
@@ -34,4 +35,6 @@ export {
   storageRef,
   uploadBytesResumable,
   getDownloadURL,
+  FieldValue,
+  Timestamp,
 };

@@ -15,20 +15,32 @@
       />
     </div>
     <div
-      v-if="message && !messageImage"
+      v-if="message && !messageImage.length > 0"
       :class="currentUser == user ? 'bg-aqua' : ''"
       class="message-wrapper"
     >
-      <p>{{ message }}</p>
+      <p v-html="highLightMessage(message)"></p>
     </div>
-    <div v-else-if="!message && messageImage">
-      <img class="w-60 rounded-md mb-2" :src="messageImage" alt="image" />
+    <div v-else-if="!message && messageImage.length > 0">
+      <img
+        v-for="(image, index) in messageImage"
+        :key="index"
+        class="w-60 rounded-md mb-2"
+        :src="image"
+        alt="image"
+      />
     </div>
     <div v-else>
       <div class="bg-white rounded-md">
-        <img class="w-60 mb-2" :src="messageImage" alt="image" />
+        <img
+          v-for="(image, index) in messageImage"
+          :key="index"
+          class="w-60 mb-2"
+          :src="image"
+          alt="image"
+        />
         <div class="message-wrapper image">
-          <p>{{ message }}</p>
+          <p v-html="highLightMessage(message)"></p>
         </div>
       </div>
     </div>
@@ -38,13 +50,21 @@
 import { defineComponent } from "vue";
 export default defineComponent({
   name: "UserMessage",
+
   props: {
     message: String,
     image: String,
     currentUser: String,
     user: String,
     userBefore: String,
-    messageImage: String,
+    messageImage: Array,
+  },
+  setup(props) {
+    const highLightMessage = (messageText) => {
+      const regex = new RegExp(`@\\b${props.currentUser}\\b`, "g");
+      return messageText.replace(regex, '<span class="highlight">$&</span>');
+    };
+    return { highLightMessage };
   },
 });
 </script>
@@ -59,5 +79,8 @@ export default defineComponent({
 }
 .message-wrapper.image {
   max-width: 240px;
+}
+.highlight {
+  color: #05bfff;
 }
 </style>

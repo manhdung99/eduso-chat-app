@@ -49,22 +49,22 @@ import { useLoginStore } from "../store/loginStore";
 const accounts = [
   {
     user: "manhdung99",
-    password: "12345678",
+    password: "1",
     avatar: "https://i.ibb.co/bQSyvVB/439757.jpg",
   },
   {
     user: "manhdung1",
-    password: "12345678",
+    password: "1",
     avatar: "https://i.ibb.co/KFK5jG0/6998190.jpg",
   },
   {
     user: "manhdung2",
-    password: "12345678",
+    password: "1",
     avatar: "https://i.ibb.co/QJ7RqMr/20473600.jpg",
   },
   {
     user: "manhdung3",
-    password: "12345678",
+    password: "1",
     avatar: "https://i.ibb.co/d6c80Yx/wp6208078.jpg",
   },
 ];
