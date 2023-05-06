@@ -425,4 +425,21 @@ export default defineComponent({
 .user-mention-item:hover {
   background: #302e2e12;
 }
+@media screen and (max-width: 767px) {
+  .home-chat-area {
+    width: 100%;
+  }
+
+  .list-message {
+    padding: 12px 4px;
+    max-height: none;
+    height: calc(100vh - 136px);
+  }
+  .message-wrapper {
+    max-width: 50%;
+  }
+  .type-message-wrapper {
+    position: fixed;
+  }
+}
 </style>

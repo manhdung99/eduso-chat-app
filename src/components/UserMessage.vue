@@ -1,10 +1,13 @@
 <template>
   <div
-    :class="currentUser == user ? 'flex-row-reverse float-right' : ''"
+    :class="[
+      currentUser == user ? 'flex-row-reverse float-right' : '',
+      userBefore == user ? '' : 'mt-2',
+    ]"
     class="flex"
   >
     <div
-      :class="currentUser == user ? 'ml-4' : 'mr-4'"
+      :class="currentUser == user ? 'ml-2 md:ml-4' : 'mr-2 md:mr-4'"
       class="rounded-full overflow-hidden w-10 h-10"
     >
       <img
@@ -21,21 +24,21 @@
     >
       <p v-html="highLightMessage(message)"></p>
     </div>
-    <div v-else-if="!message && messageImage.length > 0">
+    <div class="max-50 mb-1" v-else-if="!message && messageImage.length > 0">
       <img
         v-for="(image, index) in messageImage"
         :key="index"
-        class="w-60 rounded-md mb-2"
+        class="md:w-60 rounded-md"
         :src="image"
         alt="image"
       />
     </div>
-    <div v-else>
-      <div class="bg-white rounded-md">
+    <div class="max-50 bg-white rounded-md overflow-hidden mb-1" v-else>
+      <div>
         <img
           v-for="(image, index) in messageImage"
           :key="index"
-          class="w-60 mb-2"
+          class="md:w-60"
           :src="image"
           alt="image"
         />
@@ -82,5 +85,13 @@ export default defineComponent({
 }
 .highlight {
   color: #05bfff;
+}
+.max-50 {
+  max-width: 50%;
+}
+@media screen and (max-width: 767px) {
+  .message-wrapper {
+    max-width: 50%;
+  }
 }
 </style>
