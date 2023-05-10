@@ -2,6 +2,9 @@
   <div class="home-chat-area">
     <div class="flex justify-between border border-gray-300 bg-white px-4 py-3">
       <p>Đoạn chat cho TEST FOR UNIT 7</p>
+      <span class="absolute top-8">
+        Bạn đã ra ngoài màn hình {{ counter }} lần</span
+      >
       <img class="cursor-pointer" :src="minusIcon" alt="" />
     </div>
     <div ref="listMessage" class="list-message">
@@ -51,6 +54,7 @@
           type="file"
           @click="handleClearImage"
           class="hidden"
+          accept="image/*"
         />
         <input
           @focus="setLastestMessage"
@@ -116,7 +120,7 @@ export default defineComponent({
   name: "HomeChat",
   setup() {
     const messages = ref([]);
-    const inputMessage = ref(null);
+    const inputMessage = ref("");
     const imageMessage = ref(null);
     const listMessage = ref(null);
     const previewImage = ref([]);
@@ -237,7 +241,7 @@ export default defineComponent({
       const theReader = new FileReader();
       theReader.onloadend = async () => {
         imageMessage.value = await theReader.result;
-        previewImage.value.push(await theReader.result);
+        previewImage.value = [...previewImage.value, imageMessage.value];
       };
       theReader.readAsDataURL(file);
     };
@@ -333,6 +337,11 @@ export default defineComponent({
     UserMessageVue,
   },
   watch: {
+    previewImage: function () {
+      this.$nextTick(() => {
+        this.listMessage.scrollTop = this.listMessage.scrollHeight;
+      });
+    },
     messages: function () {
       // Scroll to the bottom of the chat window when new messages are added
       this.$nextTick(() => {
@@ -433,13 +442,19 @@ export default defineComponent({
   .list-message {
     padding: 12px 4px;
     max-height: none;
-    height: calc(100vh - 136px);
+    height: calc(100vh - 148px);
+  }
+  .list-message.has-image {
+    height: calc(100vh - 300px);
   }
   .message-wrapper {
     max-width: 50%;
   }
   .type-message-wrapper {
     position: fixed;
+  }
+  .type-message-wrapper.has-image {
+    bottom: 0;
   }
 }
 </style>
