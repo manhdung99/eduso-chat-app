@@ -2,9 +2,6 @@
   <div class="home-chat-area">
     <div class="flex justify-between border border-gray-300 bg-white px-4 py-3">
       <p>Đoạn chat cho TEST FOR UNIT 7</p>
-      <span class="absolute top-8">
-        Bạn đã ra ngoài màn hình {{ counter }} lần</span
-      >
       <img class="cursor-pointer" :src="minusIcon" alt="" />
     </div>
     <div ref="listMessage" class="list-message">
@@ -22,9 +19,15 @@
     </div>
     <form @submit.prevent="sendMessages">
       <div
+        ref="messageWrapperRef"
         :class="previewImage.length > 0 ? 'has-image' : ''"
         class="type-message-wrapper"
+        @dragover="dragover"
+        @drop="drop"
       >
+        <div @dragleave="dragleave" class="dragover-wrapper">
+          Thả file vào đây
+        </div>
         <ul
           ref="mentionWrapperRef"
           :style="{ left: mentionWrapLeft + 'px' }"
@@ -126,6 +129,7 @@ export default defineComponent({
     const previewImage = ref([]);
     const fileImageInput = ref(null);
     const inputMessageRef = ref(null);
+    const messageWrapperRef = ref(null);
     const showSuggestions = ref(false);
     const mentionWrapperRef = ref(null);
     const mentionWrapLeft = ref(0);
@@ -247,7 +251,6 @@ export default defineComponent({
     };
     // Remove image preview
     const removePreviewImage = (index) => {
-      console.log(index, 1);
       previewImage.value.splice(index, 1);
     };
     // Clear before image when select new image
@@ -270,6 +273,8 @@ export default defineComponent({
         const ctx = canvas.getContext("2d");
         let text = ctx.measureText(inputMessage.value);
         mentionWrapLeft.value = 16 + text.width + 4 * inputMessage.value.length;
+      } else {
+        showSuggestions.value = false;
       }
     };
     // Filter user when type @
@@ -297,6 +302,33 @@ export default defineComponent({
         ) {
           showSuggestions.value = false;
         }
+      }
+    };
+    const dragover = (event) => {
+      event.preventDefault();
+      if (!messageWrapperRef.value.classList.contains("ondragover")) {
+        messageWrapperRef.value.classList.add("ondragover");
+      }
+    };
+    const dragleave = (event) => {
+      event.preventDefault();
+      if (messageWrapperRef.value.classList.contains("ondragover")) {
+        messageWrapperRef.value.classList.remove("ondragover");
+      }
+    };
+    const drop = (event) => {
+      event.preventDefault();
+      const file = event.dataTransfer.files[0];
+      if (file.type.includes("image")) {
+        const theReader = new FileReader();
+        theReader.onloadend = async () => {
+          imageMessage.value = await theReader.result;
+          previewImage.value = [...previewImage.value, imageMessage.value];
+        };
+        theReader.readAsDataURL(file);
+      }
+      if (messageWrapperRef.value.classList.contains("ondragover")) {
+        messageWrapperRef.value.classList.remove("ondragover");
       }
     };
     document.addEventListener("click", onClickOutside);
@@ -331,6 +363,10 @@ export default defineComponent({
       inputMessageRef,
       mentionWrapLeft,
       mentionWrapperRef,
+      dragover,
+      dragleave,
+      drop,
+      messageWrapperRef,
     };
   },
   components: {
@@ -433,6 +469,23 @@ export default defineComponent({
 }
 .user-mention-item:hover {
   background: #302e2e12;
+}
+.dragover-wrapper {
+  display: none;
+}
+.ondragover .dragover-wrapper {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: white;
+  z-index: 1;
+  border: 2px #05bfff dashed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #05bfff;
+  font-size: 18px;
+  font-weight: 700;
 }
 @media screen and (max-width: 767px) {
   .home-chat-area {

@@ -42,6 +42,8 @@
       </a>
     </div>
   </form>
+  <div>user:manhdung99,manhdung1,manhdung2,manhdung3</div>
+  <div>password: 1</div>
 </template>
 <script>
 import { defineComponent, ref } from "vue";
